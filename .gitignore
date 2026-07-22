@@ -1,0 +1,33 @@
+# macOS and editors
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+htmlcov/
+.coverage
+
+# Node and Vite
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+npm-debug.log*
+
+# Local artifacts
+*.log
+transcript_*.txt
+subtitles_*.srt
+youtube-transcript-*.txt
+youtube-transcript-*.srt
