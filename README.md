@@ -1,9 +1,17 @@
 # YouTube Transcript Extractor
 
-A privacy-conscious full-stack app for retrieving available public YouTube captions, searching them by keyword or timestamp, jumping through the video, and exporting TXT or SRT files.
+A privacy-conscious full-stack application for retrieving, searching, navigating, and exporting available public YouTube captions.
 
-![Status: release candidate](https://img.shields.io/badge/status-release%20candidate-89eddb)
-![License: MIT](https://img.shields.io/badge/license-MIT-blue)
+Built with React, TypeScript, Flask, Python, and Docker, the project combines a browser-based interface with a hardened API, automated testing, CI, rate limiting, CORS controls, input validation, and production deployment configuration.
+
+## What it demonstrates
+
+- Full-stack application architecture across React/TypeScript and Python/Flask
+- API design, input validation, error handling, and client/server integration
+- Security-conscious implementation with CORS restrictions, rate limiting, headers, and safe client errors
+- Automated frontend and backend testing with GitHub Actions
+- Docker-based API packaging and production deployment configuration
+- Iterative AI-assisted development followed by technical review, hardening, testing, and documentation
 
 ## Features
 
@@ -122,9 +130,13 @@ Only retrieve and reuse transcripts when you have the right to do so. Follow You
 
 The app sends the video ID to the configured Flask API, which requests captions from YouTube. Transcript history is stored only in the current browser’s local storage. It can be cleared from the History screen. The repository includes no analytics, accounts, cookies, advertising, or tracking code.
 
-## Origin
+## Development approach
 
-The initial concept, source files, and documentation were exported from the shared Gemini Canvas linked in [`docs/GEMINI_PROJECT_BRIEF.md`](docs/GEMINI_PROJECT_BRIEF.md). The original downloads remain unchanged in `archive/gemini/` for provenance and comparison.
+The initial concept and source prototype were created through an AI-assisted development workflow using Gemini Canvas. Those original files are preserved unchanged in `archive/gemini/` for provenance and comparison.
+
+The production repository extends that prototype with a complete frontend scaffold, hardened API behavior, dependency controls, automated tests, CI, production deployment guidance, security documentation, and additional validation.
+
+See [`docs/GEMINI_PROJECT_BRIEF.md`](docs/GEMINI_PROJECT_BRIEF.md) for the original project brief.
 
 ## License
 
