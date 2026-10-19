@@ -1,0 +1,34 @@
+name: youtube-transcript-review
+
+services:
+  api:
+    build: ./backend
+    environment:
+      ALLOWED_ORIGINS: "http://localhost:${FRONTEND_PORT:-3000}"
+      TRANSCRIPT_RATE_LIMIT: "20 per hour"
+      RATELIMIT_STORAGE_URI: "memory://"
+      LOG_LEVEL: "INFO"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    security_opt:
+      - no-new-privileges:true
+
+  web:
+    build: ./frontend
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-3000}:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+    security_opt:
+      - no-new-privileges:true
