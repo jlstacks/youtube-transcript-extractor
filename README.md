@@ -4,6 +4,43 @@ A privacy-conscious full-stack application for retrieving, searching, navigating
 
 Built with React, TypeScript, Flask, Python, and Docker, the project combines a browser-based interface with a hardened API, automated testing, CI, rate limiting, CORS controls, input validation, and production deployment configuration.
 
+## Business Problem Solved
+
+Reviewing long public videos is slow when the useful information is buried in captions. This application makes available captions searchable and exportable, with timestamps that take the reviewer back to the source. It separates an interactive browser workspace from a small, validated API so the UI and caption retrieval can be tested and deployed independently.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    User[Reviewer] --> Web[React and TypeScript UI]
+    Web -->|same-origin /api| Proxy[Nginx reverse proxy]
+    Proxy --> API[Flask API via Gunicorn]
+    API --> Validation[Video ID validation and request limits]
+    Validation --> Captions[youtube-transcript-api]
+    Captions --> YouTube[YouTube caption interface]
+    Web --> History[Browser localStorage: ten recent transcripts]
+    Web --> Export[Clipboard and TXT or SRT download]
+```
+
+The Docker setup runs the static UI and reverse proxy in one container and the API in another. The API uses in-memory rate-limit counters by default; it does **not** cache transcripts or use a database. Redis is an optional shared **rate-limit storage** backend for a separately configured multi-instance deployment, not an implemented transcript cache.
+
+## Evaluator quickstart
+
+Install Docker Engine with Compose v2 (or Docker Desktop), then run from the repository root:
+
+```bash
+docker compose up --build --wait
+curl --fail http://localhost:3000/api/health
+```
+
+Open `http://localhost:3000`. No API key, account, or environment-file copy is needed. The first build downloads dependencies and can take several minutes. Ports bind to loopback; the API is reached through Nginx rather than exposed directly. If port 3000 is busy, use `FRONTEND_PORT=3001 docker compose up --build --wait` and open port 3001.
+
+```bash
+docker compose down
+```
+
+The health check verifies local service readiness without calling YouTube. This local demo shares the API's rate-limit bucket across requests from the Nginx proxy. Production deployments need an explicitly trusted proxy configuration and shared rate-limit storage before scaling. Actual caption retrieval still depends on caption availability and YouTube's upstream restrictions. See [Important limitations](#important-limitations).
+
 ## What it demonstrates
 
 - Full-stack application architecture across React/TypeScript and Python/Flask
@@ -26,11 +63,12 @@ Built with React, TypeScript, Flask, Python, and Docker, the project combines a 
 
 ```text
 .
-├── archive/gemini/        # Original Gemini-generated source files, unchanged
+├── archive/gemini/         # Original prototype: reference only, never deployed
 ├── backend/               # Flask API, Python dependencies, and tests
 ├── docs/                  # Original project brief and review notes
 ├── frontend/              # Vite + React + TypeScript application
 ├── .github/workflows/     # CI checks for both stacks
+├── docker-compose.yml     # Local two-service evaluator environment
 ├── CONTRIBUTING.md
 ├── SECURITY.md
 └── LICENSE
@@ -39,7 +77,7 @@ Built with React, TypeScript, Flask, Python, and Docker, the project combines a 
 ## Prerequisites
 
 - Python 3.10 or newer
-- Node.js 20.19+, 22.12+, or a newer supported release
+- Node.js 24 (matching CI and the frontend container)
 - npm
 
 ## Local setup
@@ -62,7 +100,7 @@ In a second terminal:
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
@@ -104,7 +142,7 @@ npm run build
 npm audit --audit-level=high
 ```
 
-GitHub Actions runs these checks on pushes and pull requests.
+GitHub Actions runs these checks on pushes and pull requests, plus a Docker Compose build and HTTP smoke test covering health, rejected input, static assets, and client-side routing.
 
 ## Production notes
 

@@ -8,6 +8,10 @@
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+cookies*.txt
+*session*.json
 
 # Python
 __pycache__/
@@ -18,6 +22,9 @@ __pycache__/
 venv/
 htmlcov/
 .coverage
+*.db
+*.sqlite
+*.sqlite3
 
 # Node and Vite
 node_modules/
