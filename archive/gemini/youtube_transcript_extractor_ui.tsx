@@ -333,13 +333,10 @@ const App = () => {
                       )}
                     </h3>
                     <div className="aspect-video w-full bg-slate-950 rounded-xl overflow-hidden border border-slate-800">
-                      <iframe
-                        src={`https://www.youtube.com/embed/${transcriptData.videoId}?start=${selectedTimestamp}&autoplay=1`}
-                        title="YouTube Video Player"
-                        className="w-full h-full border-0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      />
+                      <p className="p-4 text-xs text-slate-400">
+                        Video embeds are disabled in this archived prototype.
+                        Use the supported application for validated video playback.
+                      </p>
                     </div>
                     <div className="mt-4 text-xs text-slate-400 space-y-1">
                       <div className="flex justify-between">
@@ -352,14 +349,9 @@ const App = () => {
                       </div>
                       <div className="flex justify-between">
                         <span>Source URL:</span>
-                        <a
-                          href={transcriptData.videoUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-blue-400 hover:underline flex items-center"
-                        >
-                          Watch on YT <Icons.ExternalLink />
-                        </a>
+                        <span className="text-slate-200 break-all">
+                          {transcriptData.videoUrl}
+                        </span>
                       </div>
                     </div>
                   </div>
