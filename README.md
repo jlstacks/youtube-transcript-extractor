@@ -8,6 +8,24 @@ Built with React, TypeScript, Flask, Python, and Docker, the project combines a 
 
 Reviewing long public videos is slow when the useful information is buried in captions. This application makes available captions searchable and exportable, with timestamps that take the reviewer back to the source. It separates an interactive browser workspace from a small, validated API so the UI and caption retrieval can be tested and deployed independently.
 
+### Persona pain points
+
+- **Researchers and analysts:** Relevant statements can be difficult to locate inside long videos.
+- **Content and sales teams:** Reusing public-caption material requires a searchable, timestamped handoff rather than repeated manual playback.
+- **Technical reviewers:** A demo is harder to evaluate when its frontend, upstream dependency, rate limits, and failure modes are hidden.
+
+### Business value and ROI boundary
+
+Search, timestamp navigation, and export reduce repetitive review work and make findings easier to trace back to the source video. The repository does not claim a measured productivity gain or guaranteed caption coverage; both depend on the review workflow and YouTube's available caption tracks.
+
+### System invariants
+
+- The API accepts validated YouTube video identifiers and returns safe client errors.
+- Transcript responses use `Cache-Control: no-store`; the server does not cache transcript content.
+- Recent transcript history stays in the current browser's local storage and can be cleared by the user.
+- Rate limiting is always enabled. Redis may store shared rate-limit counters, but never transcript data.
+- Caption retrieval depends on public availability and YouTube's upstream interface.
+
 ## Architecture
 
 ```mermaid
@@ -15,9 +33,14 @@ flowchart LR
     User[Reviewer] --> Web[React and TypeScript UI]
     Web -->|same-origin /api| Proxy[Nginx reverse proxy]
     Proxy --> API[Flask API via Gunicorn]
-    API --> Validation[Video ID validation and request limits]
+    API --> Validation[Video ID validation]
+    API --> Limiter[Flask-Limiter request gate]
+    Limiter -->|default| Memory[(In-memory rate-limit counters)]
+    Limiter -.->|optional multi-instance deployment| Redis[(Redis shared rate-limit counters)]
     Validation --> Captions[youtube-transcript-api]
-    Captions --> YouTube[YouTube caption interface]
+    Captions -->|request public captions| YouTube[YouTube caption interface]
+    YouTube -->|caption data| Captions
+    Captions -->|no-store response| Web
     Web --> History[Browser localStorage: ten recent transcripts]
     Web --> Export[Clipboard and TXT or SRT download]
 ```
