@@ -137,10 +137,10 @@ def get_transcript():
             'success': False,
             'error': 'No transcript or closed captions were found for this video.'
         }), 404
-    except Exception as e:
+    except Exception:
         return jsonify({
             'success': False,
-            'error': f"Failed to retrieve transcript: {str(e)}"
+            'error': 'Failed to retrieve transcript.'
         }), 500
 
 def format_srt_time(seconds):
@@ -159,4 +159,4 @@ def health_check():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     print(f"🚀 Starting YouTube Transcript Extractor API on port {port}...")
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='127.0.0.1', port=port, debug=False)

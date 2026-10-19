@@ -63,7 +63,7 @@ The health check verifies local service readiness without calling YouTube. This 
 
 ```text
 .
-├── archive/gemini/         # Original prototype: reference only, never deployed
+├── archive/gemini/         # Prototype reference with safety edits; never deployed
 ├── backend/               # Flask API, Python dependencies, and tests
 ├── docs/                  # Original project brief and review notes
 ├── frontend/              # Vite + React + TypeScript application
@@ -170,7 +170,7 @@ The app sends the video ID to the configured Flask API, which requests captions 
 
 ## Development approach
 
-The initial concept and source prototype were created through an AI-assisted development workflow using Gemini Canvas. Those original files are preserved unchanged in `archive/gemini/` for provenance and comparison.
+The initial concept and source prototype were created through an AI-assisted development workflow using Gemini Canvas. The files in `archive/gemini/` retain that provenance with documented, targeted safety edits. The original imported versions remain in Git history for comparison.
 
 The production repository extends that prototype with a complete frontend scaffold, hardened API behavior, dependency controls, automated tests, CI, production deployment guidance, security documentation, and additional validation.
 
