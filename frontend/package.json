@@ -10,16 +10,16 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "react": "19.2.7",
-    "react-dom": "19.2.7"
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "6.0.5",
-    "@types/node": "^24.0.0",
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "typescript": "7.0.2",
-    "vite": "8.2.1",
-    "vitest": "4.1.11"
+    "vite": "8.3.4",
+    "vitest": "5.0.5"
   }
 }
